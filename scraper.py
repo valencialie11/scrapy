@@ -23,9 +23,10 @@ class YAnovels(scrapy.Spider):
                 #we just want the first element that matches the selector. This gives us a string, rather than a list of elements.
             }
         
-        NEXT_PAGE_SELECTOR = './/a[contains(@class, "next_page")]/a[contains(@rel, "next")]/a[@href]'
-        next_page = response.xpath(NEXT_PAGE_SELECTOR).extract_first()
-        if next_page:
-            next_page_url = 'https://www.goodreads.com' + next_page
-            request = scrapy.Request(url=next_page_url)
-            yield request
+            NEXT_PAGE_SELECTOR = './/a[@class= "next_page"]/@href'
+            next_page = response.xpath(NEXT_PAGE_SELECTOR).extract()
+            if next_page:
+                next_href = next_page[0]
+                next_page_url = 'https://www.goodreads.com' + next_href
+                request = scrapy.Request(url=next_page_url)
+                yield request
